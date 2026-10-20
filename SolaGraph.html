@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celestial Spirograph Orbit Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #1e293b;
+      height: 6px;
+      border-radius: 9999px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      border: 2px solid #0f172a;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #60a5fa;
+      transform: scale(1.1);
+    }
+    .planet-btn.active {
+      box-shadow: 0 0 12px currentColor;
+      border-color: currentColor;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="flex flex-col gap-4 w-full max-w-[500px]">
+    
+    <div class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md">
+      <div class="text-center text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 select-none">
+        Select Two Celestial Bodies to Connect
+      </div>
+      <div id="planetSelector" class="grid grid-cols-5 gap-2 items-center px-1">
+        <button data-planet="mercury" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-slate-400 border-2 border-slate-600 group-hover:border-slate-300 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">☿</div>
+          <span class="text-[8px] text-slate-400 font-semibold">Merc</span>
+        </button>
+        <button data-planet="venus" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-amber-200 border-2 border-amber-400 group-hover:border-amber-100 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♀</div>
+          <span class="text-[8px] text-amber-200 font-semibold">Venu</span>
+        </button>
+        <button data-planet="earth" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-blue-500 border-2 border-blue-600 group-hover:border-blue-400 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♁</div>
+          <span class="text-[8px] text-blue-400 font-semibold">Eart</span>
+        </button>
+        <button data-planet="moon" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-slate-200 border-2 border-slate-300 group-hover:border-white flex items-center justify-center text-slate-950 font-bold text-[10px] transition">☾</div>
+          <span class="text-[8px] text-slate-200 font-semibold">Moon</span>
+        </button>
+        <button data-planet="mars" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-red-500 border-2 border-red-600 group-hover:border-red-400 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♂</div>
+          <span class="text-[8px] text-red-400 font-semibold">Mars</span>
+        </button>
+        <button data-planet="jupiter" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-orange-300 border-2 border-orange-500 group-hover:border-orange-400 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♃</div>
+          <span class="text-[8px] text-orange-400 font-semibold">Jupi</span>
+        </button>
+        <button data-planet="saturn" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-yellow-100 border-2 border-yellow-300 group-hover:border-yellow-200 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♄</div>
+          <span class="text-[8px] text-yellow-200 font-semibold">Satu</span>
+        </button>
+        <button data-planet="uranus" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-cyan-300 border-2 border-cyan-500 group-hover:border-cyan-400 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♅</div>
+          <span class="text-[8px] text-cyan-400 font-semibold">Uran</span>
+        </button>
+        <button data-planet="neptune" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-blue-700 border-2 border-blue-900 group-hover:border-blue-600 flex items-center justify-center text-white font-bold text-[10px] transition">♆</div>
+          <span class="text-[8px] text-blue-500 font-semibold">Nept</span>
+        </button>
+        <button data-planet="pluto" class="planet-btn group flex flex-col items-center gap-1 transition focus:outline-none">
+          <div class="w-7 h-7 rounded-full bg-slate-200 border-2 border-slate-400 group-hover:border-slate-100 flex items-center justify-center text-slate-950 font-bold text-[10px] transition">♇</div>
+          <span class="text-[8px] text-slate-400 font-semibold">Plut</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="w-full aspect-square bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden relative">
+      <canvas id="orbitCanvas" class="w-full h-full block"></canvas>
+      <div id="yearCounter" class="absolute top-3 left-3 bg-slate-950/80 border border-slate-800 text-slate-300 px-2 py-1 rounded text-[10px] font-mono tracking-wider pointer-events-none select-none">
+        Earth Years: 0y 0m
+      </div>
+      <button id="btnClear" class="absolute top-3 right-3 bg-slate-950/80 hover:bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white px-2.5 py-1 rounded text-xs transition duration-150 select-none">
+        Clear Trail
+      </button>
+      <div id="selectionOverlay" class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center p-6 text-center transition-all duration-300 pointer-events-none opacity-0">
+        <span class="text-3xl mb-3">🌌</span>
+        <h3 class="text-sm font-bold text-slate-200">Select Exactly Two Planets</h3>
+      </div>
+    </div>
+
+    <div class="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md flex flex-col gap-2">
+      <div class="flex justify-between items-center text-xs font-semibold tracking-wider text-slate-400 select-none">
+        <span>SIMULATION SPEED</span>
+        <span id="speedLabel" class="text-blue-400 font-mono text-sm bg-slate-950 px-2 py-0.5 rounded border border-slate-800">1x</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-[10px] font-bold text-slate-500 select-none">SLOW</span>
+        <input id="speedSlider" type="range" min="1" max="100" step="1" value="1" class="flex-1 cursor-pointer">
+        <span class="text-[10px] font-bold text-slate-500 select-none">FAST</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('orbitCanvas');
+    const ctx = canvas.getContext('2d');
+    const trailCanvas = document.createElement('canvas');
+    const trailCtx = trailCanvas.getContext('2d');
+    const yearCounter = document.getElementById('yearCounter');
+
+    const planetDatabase = {
+      mercury: { name: 'Mercury', a: 0.387, period: 0.2408 * 10000, color: '#94a3b8', size: 3.5, activeColor: 'text-slate-400' },
+      venus:   { name: 'Venus',   a: 0.723, period: 0.6152 * 10000, color: '#fef08a', size: 6.0, activeColor: 'text-amber-200' },
+      earth:   { name: 'Earth',   a: 1.000, period: 1.0000 * 10000, color: '#3b82f6', size: 7.0, activeColor: 'text-blue-500' },
+      moon:    { name: 'Moon',    a: 1.050, period: 0.0748 * 10000, color: '#e2e8f0', size: 2.0, activeColor: 'text-slate-200' },
+      mars:    { name: 'Mars',    a: 1.524, period: 1.8808 * 10000, color: '#ef4444', size: 5.0, activeColor: 'text-red-500' },
+      jupiter: { name: 'Jupiter', a: 5.203, period: 11.862 * 10000, color: '#fdba74', size: 14.0, activeColor: 'text-orange-300' },
+      saturn:  { name: 'Saturn',  a: 9.582, period: 29.457 * 10000, color: '#fef08a', size: 11.5, activeColor: 'text-yellow-100' },
+      uranus:  { name: 'Uranus',  a: 19.22, period: 84.011 * 10000, color: '#67e8f9', size: 9.0, activeColor: 'text-cyan-400' },
+      neptune: { name: 'Neptune', a: 30.06, period: 164.81 * 10000, color: '#1d4ed8', size: 8.5, activeColor: 'text-blue-500' },
+      pluto:   { name: 'Pluto',   a: 39.48, period: 248.00 * 10000, color: '#e2e8f0', size: 2.5, activeColor: 'text-slate-400' }
+    };
+
+    let selectedPlanets = ['earth', 'moon'];
+    let lastTime = performance.now();
+    let elapsed = 0;
+    let speedMultiplier = 1;
+
+    function getNonLinearSpeed(sliderVal) {
+      if (sliderVal <= 25) return sliderVal;
+      return 25 + Math.pow((sliderVal - 25) / 75, 1.5) * 225;
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.floor(rect.width * dpr);
+      const h = Math.floor(rect.height * dpr);
+      canvas.width = w; canvas.height = h;
+      trailCanvas.width = w; trailCanvas.height = h;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      trailCtx.setTransform(1, 0, 0, 1, 0, 0);
+      trailCtx.clearRect(0, 0, w, h);
+    }
+    window.addEventListener('resize', resize); resize();
+
+    document.getElementById('speedSlider').addEventListener('input', (e) => {
+      speedMultiplier = getNonLinearSpeed(parseInt(e.target.value, 10));
+      document.getElementById('speedLabel').textContent = Math.round(speedMultiplier) + 'x';
+    });
+    
+    function resetSimulation() {
+      trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      elapsed = 0; 
+      yearCounter.textContent = 'Earth Years: 0y 0m';
+    }
+
+    document.getElementById('btnClear').addEventListener('click', resetSimulation);
+
+    document.querySelectorAll('.planet-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const planetKey = btn.getAttribute('data-planet');
+        if (selectedPlanets.includes(planetKey)) {
+          selectedPlanets = selectedPlanets.filter(p => p !== planetKey);
+        } else {
+          if (selectedPlanets.length >= 2) selectedPlanets.shift();
+          selectedPlanets.push(planetKey);
+        }
+        resetSimulation();
+        updateButtonStyles();
+      });
+    });
+
+    function updateButtonStyles() {
+      document.querySelectorAll('.planet-btn').forEach(btn => {
+        const planetKey = btn.getAttribute('data-planet');
+        const planetData = planetDatabase[planetKey];
+        if (selectedPlanets.includes(planetKey)) {
+          btn.classList.add('active', planetData.activeColor);
+        } else {
+          btn.classList.remove('active', 'text-slate-400', 'text-amber-200', 'text-blue-500', 'text-red-500', 'text-orange-300', 'text-yellow-100', 'text-cyan-400', 'text-slate-200');
+        }
+      });
+      document.getElementById('selectionOverlay').style.opacity = selectedPlanets.length < 2 ? '1' : '0';
+    }
+    updateButtonStyles();
+
+    function draw(now) {
+      elapsed += Math.min(now - lastTime, 16) * speedMultiplier;
+      lastTime = now;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (selectedPlanets.length === 2) {
+        const totalYears = elapsed / 10000;
+        const years = Math.floor(totalYears);
+        const months = Math.floor((totalYears % 1) * 12);
+        yearCounter.textContent = `Earth Years: ${years}y ${months}m`;
+
+        const p1 = planetDatabase[selectedPlanets[0]], p2 = planetDatabase[selectedPlanets[1]];
+        const maxA = Math.max(p1.a, p2.a);
+        const orbitScaleFactor = (Math.min(canvas.width, canvas.height) * 0.4) / maxA;
+        const cx = canvas.width / 2, cy = canvas.height / 2;
+        const theta1 = ((elapsed % p1.period) / p1.period) * Math.PI * 2, theta2 = ((elapsed % p2.period) / p2.period) * Math.PI * 2;
+        const x1 = cx + p1.a * orbitScaleFactor * Math.cos(theta1), y1 = cy + p1.a * orbitScaleFactor * Math.sin(theta1);
+        const x2 = cx + p2.a * orbitScaleFactor * Math.cos(theta2), y2 = cy + p2.a * orbitScaleFactor * Math.sin(theta2);
+
+        const grad = trailCtx.createLinearGradient(x1, y1, x2, y2);
+        grad.addColorStop(0, p1.color);
+        grad.addColorStop(1, p2.color);
+        
+        trailCtx.beginPath();
+        trailCtx.moveTo(x1, y1);
+        trailCtx.lineTo(x2, y2);
+        trailCtx.strokeStyle = grad;
+        trailCtx.globalAlpha = 0.3; 
+        trailCtx.lineWidth = 1.2;
+        trailCtx.stroke();
+        trailCtx.globalAlpha = 1.0;
+
+        ctx.drawImage(trailCanvas, 0, 0);
+        
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1; ctx.stroke();
+        
+        ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI * 2); ctx.fillStyle = '#f59e0b'; ctx.fill();
+        [ {x:x1, y:y1, p:p1}, {x:x2, y:y2, p:p2} ].forEach(obj => {
+          ctx.beginPath(); ctx.arc(obj.x, obj.y, obj.p.size + 2, 0, Math.PI * 2);
+          ctx.fillStyle = obj.p.color; ctx.fill();
+        });
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame((t) => { lastTime = t; draw(t); });
+  </script>
+</body>
+</html>
